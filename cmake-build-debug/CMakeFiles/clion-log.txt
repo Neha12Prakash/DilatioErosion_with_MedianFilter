@@ -1,0 +1,5 @@
+/snap/clion/158/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/amey/MyVOL/UniStuttgart/Sem2/HPCwGC/Project/Repo/Dilation_and_Erosion_with_Median_Filter
+OS: Linux
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/amey/MyVOL/UniStuttgart/Sem2/HPCwGC/Project/Repo/Dilation_and_Erosion_with_Median_Filter/cmake-build-debug

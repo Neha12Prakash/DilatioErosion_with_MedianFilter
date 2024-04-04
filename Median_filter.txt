@@ -1,0 +1,82 @@
+-->>Median Filter:
+->Is a non-linear digital filter
+->Often used to remove salt and pepper noise from the image 
+->Preserving edges of the image 
+
+
+-->>Algorithm to remove noise:
+->The main idea is to run through the image pixel entry one by one, 
+and replacing each entry with the median of neighboring entries.
+->Median is the middle element of a sorted array of pixel values, from the filter window.
+->The window silds over all the pixel applying filtering process
+->Considered window sizes are 3*3 and 5*5
+->Image edges can be preserved by zero padding
+
+
+-->>Conclusion:
+->Median filter window sizes of  gives a degree of effect on noise removal in images. 
+->3*3 window size gives better performance in low noise densities.
+->When noise density increasing the low window sizes ability to remove noise will be
+degraded.
+->5*5 window size filter images is better even in high noise density.
+->But it will add a degree of blurring effect on the image.
+
+
+
+-->>Reference from Professor's slides on sobel filter:
+
+-->>Implementation:
+-->>OpenCL Images / Syntax Host
+->Creating an Image:
+cl::Image2D::Image2D(cl::Context context,
+cl_mem_flags flags, cl::ImageFormat format,
+std::size_t width, std::size_t height);
+context = The OpenCL context to use
+flags = Normally CL_MEM_READ_ONLY
+format = The content of the image, 
+cl::ImageFormat(CL_R,CL_FLOAT), 
+channel order CL_R = R channel, 
+channel data type CL_FLOAT = contains floats
+width = Width of the image
+height = Height of the image
+
+->Copying data to an image:
+cl::CommandQueue::enqueueWriteImage(cl::Image& image,
+cl_bool blocking, cl::size_t<3> origin, cl::size_t<3> region,
+std::size_t row_pitch, std::size_t slice_pitch, void* ptr,
+eventsToWaitFor = NULL, cl::Event* event = NULL) const;
+image = The destination image
+blocking = Wait until copy operation has finished (normally true)
+origin = The offset in (x,y,z) in pixels in the image to write
+region = The size of the region being written
+row_pitch = Length of each row in bytes in the image, normally
+larger than (for offsets) or equal to width * sizeof(ElementType),
+if set to 0, the default is width * sizeof(ElementType)
+slice_pitch = Bytes between two slices, for 2D images use 0
+ptr = Pointer to source data
+
+->Syntax for cl::size_t<3>:
+cl::size_t<3> origin;
+origin[0] = origin[1] = origin[2] = 0;
+cl::size_t<3> region;
+region[0] = width;
+region[1] = height;
+region[2] = 1;
+queue.enqueueWriteImage(..., origin, region, ...);
+Kernel.setArg<cl::Image2D>(0, image);
+origin = The origin of the destination region, normally (0, 0, 0)
+region = The size of the destination region, for 2D images normally
+(width, height, 1)
+
+->Syntax Kernel
+Syntax for using an image:
+// declare sampler
+const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE
+| CLK_ADDRESS_CLAMP | CLK_FILTER_NEAREST;
+// pass image as parameter
+__kernel void medianKernel(__read_only image2d_t d_input, ...)
+// read value at (i, j)
+float f = read_imagef(d_input, sampler, (int2){i, j}).x;
+// write value at (i, j)
+write_imagef(d_output, (int2){i,j}, (float4)x);
+with x being float4 format: (grayvalue, 0, 0, 1).

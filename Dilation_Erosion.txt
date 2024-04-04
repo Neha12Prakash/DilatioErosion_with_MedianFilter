@@ -1,0 +1,28 @@
+Dilation and Erosion
+->Basic morphological operations
+
+->Basics of dilation: 
+ -->Increases the object area
+-->Used to enhance features
+
+->Algorithm of dilation:
+-->A kernel is a matrix of odd size(3*3 or 5*5) is convolved with the input image.
+-->A pixel element in the original image is 1 if at least one pixel under the kernel is 1.
+-->the foreground object increases 
+ 
+
+
+->Erosion: 
+-->Erodes away the boundaries of the foreground object.
+-->Used to shrink the features of an image.
+
+-->A kernel is a matrix of odd size(3*3 or 5*5) is convolved with the input image.
+-->A pixel in the original image (either 1 or 0) will be considered 1 only if all the pixels under the kernel are 1
+-->otherwise, it is made to zero or eroded.
+-->Due to erosin, all the pixels near the boundary will be discarded depending upon the size of the kernel.
+-->So the thickness or size of the foreground object decreases.
+
+
+
+
+
